@@ -8,9 +8,6 @@ typedef unsigned int WORD;
 const int memory_size = 128;
 unsigned char* memory;
 
-const int program_size = 128;
-unsigned char* program;
-
 WORD registers[31];
 
 REGISTER PC;
@@ -29,10 +26,6 @@ void dump_memory_range(unsigned char* start, int length, int bytes_per_row) {
 
 void memory_dump(int bytes_per_row) {
   dump_memory_range(memory, memory_size, bytes_per_row);
-}
-
-void program_dump(int bytes_per_row) {
-  dump_memory_range(program, program_size, bytes_per_row);
 }
 
 int load_word(ADDRESS addr) {
@@ -64,7 +57,7 @@ void set_register(int number, WORD value) {
 // Returns: 0 if success, 1 if error
 int step() {
   int opcode = load_word(PC) & (0b111111 << 26);
-  return 0
+  return 0;
 }
 
 int main(void) {
@@ -73,12 +66,6 @@ int main(void) {
   int i;
   for(i = 0; i < memory_size; i++) {
     memory[i] = 0;
-  }
-
-  printf("Initializing program memory...\n");
-  program = malloc(program_size);
-  for(i = 0; i < program_size; i++) {
-    program[i] = 0;
   }
 
   printf("Initializing registers...\n");
