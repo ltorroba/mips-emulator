@@ -7,6 +7,10 @@ typedef unsigned int WORD;
 
 const int memory_size = 128;
 unsigned char* memory;
+
+const int program_size = 128;
+unsigned char* program;
+
 REGISTER PC;
 
 void dump_memory_range(unsigned char* start, int length, int bytes_per_row) {
@@ -23,6 +27,10 @@ void dump_memory_range(unsigned char* start, int length, int bytes_per_row) {
 
 void memory_dump(int bytes_per_row) {
   dump_memory_range(memory, memory_size, bytes_per_row);
+}
+
+void program_dump(int bytes_per_row) {
+  dump_memory_range(program, program_size, bytes_per_row);
 }
 
 int load_word(ADDRESS addr) {
@@ -53,6 +61,12 @@ int main(void) {
   int i;
   for(i = 0; i < memory_size; i++) {
     memory[i] = 0;
+  }
+
+  printf("Initializing program memory...\n");
+  program = malloc(program_size);
+  for(i = 0; i < program_size; i++) {
+    program[i] = 0;
   }
 
   printf("Initializing registers...\n");
