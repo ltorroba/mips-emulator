@@ -9,16 +9,20 @@ const int memory_size = 128;
 unsigned char* memory;
 REGISTER PC;
 
-void memory_dump(int bytes_per_row) {
-  // TODO: Assert arg is a multiple of 4
+void dump_memory_range(unsigned char* start, int length, int bytes_per_row) {
+  // TODO: bytes_per_row is a multiple of 4
   int i;
-  for(i = 0; i < memory_size / bytes_per_row; i++) {
+  for(i = 0; i < length / bytes_per_row; i++) {
     int j;
     for(j = 0; j < bytes_per_row; j++) {
-      printf("0x%02x ", memory[i * bytes_per_row + j]);
+      printf("0x%02x ", *(start + i * bytes_per_row + j));
     }
     printf("\n");
   }
+}
+
+void memory_dump(int bytes_per_row) {
+  dump_memory_range(memory, memory_size, bytes_per_row);
 }
 
 int load_word(ADDRESS addr) {
