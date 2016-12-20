@@ -31,7 +31,7 @@ void memory_dump(int bytes_per_row) {
   dump_memory_range(memory, memory_size, bytes_per_row);
 }
 
-int load_word(ADDRESS addr) {
+WORD load_word(ADDRESS addr) {
   WORD temp = memory[addr];
   temp = temp | (memory[addr + 1] << 8);
   temp = temp | (memory[addr + 2] << 16);
