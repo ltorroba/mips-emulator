@@ -67,7 +67,13 @@ int step() {
   int rt = (instruction >> 16) & 0b11111;
   int rd = (instruction >> 11) & 0b11111;
   int shamt = (instruction >> 6) & 0b11111;
-  int func = instruction & 0b11111;
+  int func = instruction & 0b111111;
+
+  // I-type instruction (rs, rt as above)
+  int imm = instruction & 65535; // 16 lower bits
+
+  // J-type (pseudo address is 26 bit, shifted by 2, and top 6 bits same as current PC)
+  int pseudo_addr = (PC & (0b111111 << 26)) | (instruction & 0x3FFFFFF); // 0x3FFFFFF is 26 lower bits set
 
   return 0;
 }
