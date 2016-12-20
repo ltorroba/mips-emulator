@@ -11,6 +11,8 @@ unsigned char* memory;
 const int program_size = 128;
 unsigned char* program;
 
+WORD registers[31];
+
 REGISTER PC;
 
 void dump_memory_range(unsigned char* start, int length, int bytes_per_row) {
@@ -48,11 +50,21 @@ void store_word(WORD word, ADDRESS addr) {
   memory[addr + 3] = word >> 24;
 }
 
+WORD get_register(int number) {
+  if(number == 0) return 0;
+  else return registers[number - 1];
+}
+
+void set_register(int number, WORD value) {
+  if(number > 0)
+    registers[number - 1] = value;
+}
+
 // Executes the next instruction
 // Returns: 0 if success, 1 if error
 int step() {
   int opcode = load_word(PC) & (0b111111 << 26);
-  return 0;
+  return 0
 }
 
 int main(void) {
