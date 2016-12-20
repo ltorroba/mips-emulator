@@ -60,7 +60,7 @@ void set_register(int number, WORD value) {
 // Returns: 0 if success, 1 if error
 int step() {
   WORD instruction = load_word(PC);
-  int opcode = instruction & (0b111111 << 26);
+  int opcode = (instruction >> 26) & 0b111111;
 
   // R-type instruction
   int rs = (instruction >> 21) & 0b11111;
