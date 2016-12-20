@@ -75,6 +75,28 @@ int step() {
   // J-type (pseudo address is 26 bit, shifted by 2, and top 6 bits same as current PC)
   int pseudo_addr = (PC & (0b111111 << 26)) | (instruction & 0x3FFFFFF); // 0x3FFFFFF is 26 lower bits set
 
+  // Register values (unsigned)
+  REGISTER Rs = get_register(rs);
+  REGISTER Rt = get_register(rt);
+
+  // Register values (signed)
+  signed int Rss = *(REGISTER*)&Rs;
+  signed int Rts = *(REGISTER*)&Rt;
+
+  switch(opcode) {
+    case 0b000000: // ALU
+      switch(func) {
+        case 0b100000: // add (traps on overflow)
+          if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) | (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
+            // Overflow occurred, trap
+            return 1;
+          }
+          set_register(rd, Rss + Rts);
+          break;
+      }
+      break;
+  }
+
   return 0;
 }
 
