@@ -4,9 +4,10 @@
 typedef unsigned int REGISTER;
 typedef unsigned int ADDRESS;
 typedef unsigned int WORD;
+typedef unsigned char BYTE;
 
-const int memory_size = 128;
-unsigned char* memory;
+const unsigned int memory_size = 128;
+BYTE* memory;
 
 WORD registers[31];
 
