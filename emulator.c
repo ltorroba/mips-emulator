@@ -6,14 +6,16 @@ typedef unsigned int ADDRESS;
 typedef unsigned int WORD;
 typedef unsigned char BYTE;
 
+// VM configuration
 const unsigned int memory_size = 128;
+
+// VM state variables
 BYTE* memory;
 
-WORD registers[31];
-
 REGISTER PC;
+REGISTER registers[31];
 
-void dump_memory_range(unsigned char* start, int length, int bytes_per_row) {
+void dump_memory_range(BYTE* start, int length, int bytes_per_row) {
   // TODO: bytes_per_row is a multiple of 4
   int i;
   for(i = 0; i < length / bytes_per_row; i++) {
@@ -58,6 +60,9 @@ void set_register(int number, WORD value) {
 // Returns: 0 if success, 1 if error
 int step() {
   int opcode = load_word(PC) & (0b111111 << 26);
+
+  // R-type instruction
+
   return 0;
 }
 
