@@ -59,9 +59,15 @@ void set_register(int number, WORD value) {
 // Executes the next instruction
 // Returns: 0 if success, 1 if error
 int step() {
-  int opcode = load_word(PC) & (0b111111 << 26);
+  WORD instruction = load_word(PC);
+  int opcode = instruction & (0b111111 << 26);
 
   // R-type instruction
+  int rs = (instruction >> 21) & 0b11111;
+  int rt = (instruction >> 16) & 0b11111;
+  int rd = (instruction >> 11) & 0b11111;
+  int shamt = (instruction >> 6) & 0b11111;
+  int func = instruction & 0b11111;
 
   return 0;
 }
