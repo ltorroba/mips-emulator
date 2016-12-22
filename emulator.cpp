@@ -21,8 +21,7 @@ REGISTER registers[31];
 
 void dump_memory_range(BYTE* start, int length, int bytes_per_row) {
   // TODO: bytes_per_row is a multiple of 4
-  int i;
-  for(i = 0; i < length / bytes_per_row; i++) {
+  for(int i = 0; i < length / bytes_per_row; i++) {
     int j;
     for(j = 0; j < bytes_per_row; j++) {
       printf("0x%02x ", *(start + i * bytes_per_row + j));
@@ -110,8 +109,7 @@ int step() {
 int main(int argc, char * argv[]) {
   cout << "Initializing memory..." << endl;
   memory = new BYTE[memory_size];
-  int i;
-  for(i = 0; i < memory_size; i++) {
+  for(int i = 0; i < memory_size; i++) {
     memory[i] = 0;
   }
 
