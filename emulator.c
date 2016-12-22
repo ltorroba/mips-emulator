@@ -93,6 +93,9 @@ int step() {
           }
           set_register(rd, Rss + Rts);
           break;
+        case 0b100001: // addu
+          set_register(rd, Rss + Rts);
+          break;
       }
       break;
   }
