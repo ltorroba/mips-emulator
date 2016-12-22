@@ -3,23 +3,23 @@
 #include <iostream>
 #include <new>
 
+#include "Emulator.hpp"
+
 using namespace std;
 
-typedef unsigned int REGISTER;
-typedef unsigned int ADDRESS;
-typedef unsigned int WORD;
-typedef unsigned char BYTE;
+Emulator::Emulator(size_t mem_size) {
+    memory_size = mem_size;
 
-// VM configuration
-const unsigned int memory_size = 128;
+    // TODO: Improve this (use memset?)
+    memory = new BYTE[memory_size];
+    for(size_t i = 0; i < memory_size; i++) {
+        memory[i] = 0;
+    }
 
-// VM state variables
-BYTE* memory;
+    PC = 0;
+}
 
-REGISTER PC;
-REGISTER registers[31];
-
-void dump_memory_range(BYTE* start, int length, int bytes_per_row) {
+void Emulator::dump_memory_range(BYTE* start, int length, int bytes_per_row) {
     // TODO: bytes_per_row is a multiple of 4
     for(int i = 0; i < length / bytes_per_row; i++) {
         int j;
@@ -30,11 +30,11 @@ void dump_memory_range(BYTE* start, int length, int bytes_per_row) {
     }
 }
 
-void memory_dump(int bytes_per_row) {
+void Emulator::memory_dump(int bytes_per_row) {
     dump_memory_range(memory, memory_size, bytes_per_row);
 }
 
-WORD load_word(ADDRESS addr) {
+WORD Emulator::load_word(ADDRESS addr) {
     WORD temp = memory[addr];
     temp = temp | (memory[addr + 1] << 8);
     temp = temp | (memory[addr + 2] << 16);
@@ -42,26 +42,26 @@ WORD load_word(ADDRESS addr) {
     return temp;
 }
 
-void store_word(WORD word, ADDRESS addr) {
+void Emulator::store_word(WORD word, ADDRESS addr) {
     memory[addr] = word;
     memory[addr + 1] = word >> 8;
     memory[addr + 2] = word >> 16;
     memory[addr + 3] = word >> 24;
 }
 
-WORD get_register(int number) {
+WORD Emulator::get_register(int number) {
     if(number == 0) return 0;
     else return registers[number - 1];
 }
 
-void set_register(int number, WORD value) {
+void Emulator::set_register(int number, WORD value) {
     if(number > 0)
         registers[number - 1] = value;
 }
 
 // Executes the next instruction
 // Returns: 0 if success, 1 if error
-int step() {
+int Emulator::step() {
     WORD instruction = load_word(PC);
     int opcode = (instruction >> 26) & 0b111111;
 
@@ -103,29 +103,5 @@ int step() {
             break;
     }
 
-    return 0;
-}
-
-int main(int argc, char * argv[]) {
-    cout << "Initializing memory..." << endl;
-    memory = new BYTE[memory_size];
-    for(int i = 0; i < memory_size; i++) {
-        memory[i] = 0;
-    }
-
-    cout << "Initializing registers..." << endl;
-    PC = 0;
-
-    cout << "Store word test:" << endl;
-    store_word(15, 0);
-    store_word(16, 4);
-    store_word(255, 8);
-    store_word(0xffffffff, 12);
-    store_word(256, 16);
-
-    printf("Load word test: 0x%02x (%u)\n", load_word(12), load_word(12));
-
-    cout << "Memory dump:" << endl;
-    memory_dump(8);
     return 0;
 }
