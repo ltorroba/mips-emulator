@@ -32,5 +32,10 @@
 *.dSYM/
 *.su
 
-# Binaries
-emulator
+# Directories
+build
+lib/*
+bin/*
+
+# Mac files
+.DS_Store
