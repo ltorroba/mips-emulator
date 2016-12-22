@@ -10,7 +10,7 @@ OBJECTS		:= $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CFLAGS		:= -g #-Wall
 
 LIB				:= # none yet
-INC				:= #-I include
+INC				:= -I include
 
 $(TARGET): $(OBJECTS)
 	@echo "	Linking..."
@@ -24,5 +24,8 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 clean:
 	@echo "	Cleaning..."
 	@echo "	$(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+
+tests: test/test.cpp
+	$(CC) $(CFLAGS) test/test.cpp $(INC) $(LIB) -o bin/test
 
 .PHONY: clean
