@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+#include <new>
+
+using namespace std;
 
 typedef unsigned int REGISTER;
 typedef unsigned int ADDRESS;
@@ -103,18 +107,18 @@ int step() {
   return 0;
 }
 
-int main(void) {
-  printf("Initializing memory...\n");
-  memory = malloc(memory_size); // 1KB
+int main(int argc, char * argv[]) {
+  cout << "Initializing memory..." << endl;
+  memory = new BYTE[memory_size];
   int i;
   for(i = 0; i < memory_size; i++) {
     memory[i] = 0;
   }
 
-  printf("Initializing registers...\n");
+  cout << "Initializing registers..." << endl;
   PC = 0;
 
-  printf("Store word test: \n");
+  cout << "Store word test:" << endl;
   store_word(15, 0);
   store_word(16, 4);
   store_word(255, 8);
@@ -123,7 +127,7 @@ int main(void) {
 
   printf("Load word test: 0x%02x (%u)\n", load_word(12), load_word(12));
 
-  printf("Memory dump: \n");
+  cout << "Memory dump:" << endl;
   memory_dump(8);
   return 0;
 }

@@ -1,8 +1,8 @@
-CC			= gcc -o
+CC			= g++ -o
 #CFLAGS	= -Wall
 
-emulator: emulator.c
-	$(CC) emulator $(CFLAGS) emulator.c
+emulator: emulator.cpp
+	$(CC) emulator $(CFLAGS) emulator.cpp
 
 
 
