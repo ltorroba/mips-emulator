@@ -35,3 +35,40 @@ TEST_CASE("Register get & set are functioning properly", "[get_register][set_reg
         }
     }
 }
+
+TEST_CASE("Memory operations are functioning properly", "[load_byte][store_byte][load_word][store_word]") {
+    Emulator* vm = new Emulator(128);
+
+    SECTION("Can individually read and write bytes on any part of the memory") {
+        for(int i = 1; i < 128; i++) {
+            vm->store_byte(0xff, i);
+            REQUIRE(vm->load_byte(i) == 0xff);
+        }
+    }
+
+    SECTION("Write words as four bytes") {
+        vm->store_word(0xffffffff, 0);
+        REQUIRE(vm->load_byte(0) == 0xff);
+        REQUIRE(vm->load_byte(1) == 0xff);
+        REQUIRE(vm->load_byte(2) == 0xff);
+        REQUIRE(vm->load_byte(3) == 0xff);
+    }
+
+    SECTION("Load word from four bytes") {
+        vm->store_word(0xffffffff, 0);
+        REQUIRE(vm->load_word(0) == 0xffffffff);
+    }
+
+    SECTION("Write words in Little-Endian") {
+        vm->store_word(0x01020304, 0);
+        REQUIRE(vm->load_byte(0) == 0x04);
+        REQUIRE(vm->load_byte(1) == 0x03);
+        REQUIRE(vm->load_byte(2) == 0x02);
+        REQUIRE(vm->load_byte(3) == 0x01);
+    }
+
+    SECTION("Read words in Little-Endian") {
+        vm->store_word(0x01020304, 0);
+        REQUIRE(vm->load_word(0) == 0x01020304);
+    }
+}
