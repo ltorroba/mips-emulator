@@ -6,6 +6,9 @@
 TEST_CASE("Emulator is constructed properly", "[Emulator][get_register]") {
     Emulator* vm = new Emulator(128);
 
+    WORD program[5] = {0x01, 0x02, 0x03, 0x04, 0x0f};
+    Emulator* vm2 = new Emulator(128, program, 5);
+
     SECTION("Retrieving any register will return 0") {
         for(int i = 0; i < 32; i++) {
             REQUIRE(vm->get_register(i) == 0);
@@ -15,6 +18,16 @@ TEST_CASE("Emulator is constructed properly", "[Emulator][get_register]") {
     SECTION("Memory will be intialized to 0") {
         for(int i = 0; i < 128; i++) {
             REQUIRE(vm->load_byte(i) == 0);
+        }
+    }
+
+    SECTION("Program will be loaded properly") {
+        for(int i = 0; i < 5; i++) {
+            REQUIRE(vm2->load_byte(i) == program[i]);
+        }
+
+        for(int i = 5; i < 128 - 5; i++) {
+            REQUIRE(vm2->load_byte(i) == 0);
         }
     }
 }
