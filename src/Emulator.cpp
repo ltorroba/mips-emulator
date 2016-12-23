@@ -16,6 +16,11 @@ Emulator::Emulator(size_t mem_size) {
         memory[i] = 0;
     }
 
+    // TODO: Improve, use memset?
+    for(size_t i = 0; i < 31; i++) {
+        registers[i] = 0;
+    }
+
     PC = 0;
 }
 
