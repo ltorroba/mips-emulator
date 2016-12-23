@@ -23,10 +23,10 @@ TEST_CASE("Emulator is constructed properly", "[Emulator][get_register]") {
 
     SECTION("Program will be loaded properly") {
         for(int i = 0; i < 5; i++) {
-            REQUIRE(vm2->load_byte(i) == program[i]);
+            REQUIRE(vm2->load_word(i*4) == program[i]);
         }
 
-        for(int i = 5; i < 128 - 5; i++) {
+        for(int i = 5*4; i < 128; i++) {
             REQUIRE(vm2->load_byte(i) == 0);
         }
     }
