@@ -149,7 +149,7 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
 
     SECTION("addu") {
         WORD program[1];
-        program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 0x21); // add r3, r1, r2
+        program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 0x21); // addu r3, r1, r2
         vm = new Emulator(128, program, 1);
 
         SECTION("functions as expected with positive, normal input") {
