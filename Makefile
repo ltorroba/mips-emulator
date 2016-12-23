@@ -1,12 +1,16 @@
 CC				:= g++
 
 SRCDIR		:= src
+TESTDIR		:= test
 BUILDDIR	:= build
 TARGET		:= bin/emulator
 
 SRCEXT		:= cpp
 SOURCES		:= $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS		:= $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+T_SOURCES	:= $(shell find $(TESTDIR) -type f -name *.$(SRCEXT))
+T_OBJECTS	:= $(patsubst $(TESTDIR)/%,$(BUILDDIR)/test/%,$(T_SOURCES:.$(SRCEXT)=.o))
+R_OBJECTS := $(shell find $(BUILDDIR) -type f -not -name main.o)
 CFLAGS		:= -g #-Wall
 
 LIB				:= # none yet
@@ -25,7 +29,13 @@ clean:
 	@echo "	Cleaning..."
 	@echo "	$(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 
-tests: test/test.cpp
-	$(CC) $(CFLAGS) test/test.cpp $(INC) $(LIB) -o bin/test
+tests: $(T_OBJECTS) $(R_OBJECTS)
+	@echo "	Linking tests..."
+	@echo "	$(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+
+$(BUILDDIR)/test/%.o: $(TESTDIR)/%.$(SRCEXT)
+	@echo "	Compiling tests..."
+	@mkdir -p $(BUILDDIR)/test
+	@echo "	$(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 .PHONY: clean
