@@ -17,7 +17,6 @@ class Emulator {
     Emulator(size_t mem_size);
     Emulator(size_t mem_size, WORD* progam, size_t program_size);
 
-
     void dump_memory_range(BYTE* start, int length, int bytes_per_row);
     void memory_dump(int bytes_per_row);
     WORD load_word(ADDRESS addr);
