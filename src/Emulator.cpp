@@ -24,13 +24,13 @@ void Emulator::init(size_t mem_size, WORD* program, size_t program_size) {
     PC = 0;
 
     // Load program to first portion of memory
-    if(mem_size < program_size) {
+    if(mem_size < program_size*4 - 1) {
         // TODO: Throw error
     }
 
     // TODO: Improve this - use memcpy?
     for(size_t i = 0; i < program_size; i++) {
-        memory[i] = program[i];
+        store_word(program[i], i*4);
     }
 }
 
