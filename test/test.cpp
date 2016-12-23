@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "../include/catch.hpp"
 
-#include "../src/Emulator.hpp"
+#include "../src/Utilities.hpp"
 
 TEST_CASE("Emulator is constructed properly", "[Emulator][get_register]") {
     Emulator* vm = new Emulator(128);
@@ -83,5 +83,67 @@ TEST_CASE("Memory operations are functioning properly", "[load_byte][store_byte]
     SECTION("Read words in Little-Endian") {
         vm->store_word(0x01020304, 0);
         REQUIRE(vm->load_word(0) == 0x01020304);
+    }
+}
+
+TEST_CASE("Test ALU operations", "[step][ALU]") {
+    Emulator* vm;
+
+    SECTION("add") {
+        WORD program[1];
+        program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 0x20); // add r3, r1, r2
+        vm = new Emulator(128, program, 1);
+
+        SECTION("functions as expected with positive, normal input") {
+            vm->set_register(1, 2);
+            vm->set_register(2, 3);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(3) == 5);
+        }
+
+        SECTION("functions as expected with negative, normal input") {
+            vm->set_register(1, -2);
+            vm->set_register(2, -3);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(3) == -5);
+        }
+
+        SECTION("functions as expected with mixed, normal input") {
+            vm->set_register(1, -2);
+            vm->set_register(2, 3);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(3) == 1);
+        }
+
+        SECTION("traps on overflow") {
+            vm->set_register(1, 0x7FFFFFFF);
+            vm->set_register(2, 1);
+
+            REQUIRE(vm->step() == 1);
+        }
+
+        SECTION("doesn't trap on overflow bound") {
+            vm->set_register(1, 0x7FFFFFFF);
+            vm->set_register(2, 0);
+
+            REQUIRE(vm->step() == 0);
+        }
+
+        SECTION("traps on underflow") {
+            vm->set_register(1, 0x80000000);
+            vm->set_register(2, -1);
+
+            REQUIRE(vm->step() == 1);
+        }
+
+        SECTION("doesn't trap on underflow bound") {
+            vm->set_register(1, 0x80000000);
+            vm->set_register(2, 0);
+
+            REQUIRE(vm->step() == 0);
+        }
     }
 }
