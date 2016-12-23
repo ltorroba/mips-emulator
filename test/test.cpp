@@ -11,6 +11,12 @@ TEST_CASE("Emulator is constructed properly", "[Emulator][get_register]") {
             REQUIRE(vm->get_register(i) == 0);
         }
     }
+
+    SECTION("Memory will be intialized to 0") {
+        for(int i = 0; i < 128; i++) {
+            REQUIRE(vm->load_byte(i) == 0);
+        }
+    }
 }
 
 TEST_CASE("Register get & set are functioning properly", "[get_register][set_register]") {
