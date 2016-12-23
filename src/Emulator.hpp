@@ -11,8 +11,12 @@ class Emulator {
     REGISTER registers[31];
     size_t memory_size;
 
+    void init(size_t mem_size, WORD* progam, size_t program_size);
+
     public:
     Emulator(size_t mem_size);
+    Emulator(size_t mem_size, WORD* progam, size_t program_size);
+
 
     void dump_memory_range(BYTE* start, int length, int bytes_per_row);
     void memory_dump(int bytes_per_row);

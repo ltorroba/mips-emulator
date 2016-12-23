@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Emulator::Emulator(size_t mem_size) {
+void Emulator::init(size_t mem_size, WORD* program, size_t program_size) {
     memory_size = mem_size;
 
     // TODO: Improve this (use memset?)
@@ -22,6 +22,24 @@ Emulator::Emulator(size_t mem_size) {
     }
 
     PC = 0;
+
+    // Load program to first portion of memory
+    if(mem_size < program_size) {
+        // TODO: Throw error
+    }
+
+    // TODO: Improve this - use memcpy?
+    for(size_t i = 0; i < program_size; i++) {
+        memory[i] = program[i];
+    }
+}
+
+Emulator::Emulator(size_t mem_size) {
+    init(mem_size, NULL, 0);
+}
+
+Emulator::Emulator(size_t mem_size, WORD* program, size_t program_size) {
+    init(mem_size, program, program_size);
 }
 
 void Emulator::dump_memory_range(BYTE* start, int length, int bytes_per_row) {
