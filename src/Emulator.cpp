@@ -116,5 +116,7 @@ int Emulator::step() {
             break;
     }
 
+    PC = PC + 4;
+
     return 0;
 }
