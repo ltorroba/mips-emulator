@@ -6,7 +6,7 @@
 TEST_CASE("Emulator is constructed properly", "[Emulator][get_register]") {
     Emulator* vm = new Emulator(128);
 
-    SECTION("Retrieving any regsiter will return 0") {
+    SECTION("Retrieving any register will return 0") {
         for(int i = 0; i < 32; i++) {
             REQUIRE(vm->get_register(i) == 0);
         }
