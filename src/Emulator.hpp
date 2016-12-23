@@ -18,6 +18,8 @@ class Emulator {
     void memory_dump(int bytes_per_row);
     WORD load_word(ADDRESS addr);
     void store_word(WORD word, ADDRESS addr);
+    BYTE load_byte(ADDRESS addr);
+    void store_byte(BYTE byte, ADDRESS addr);
     WORD get_register(int number);
     void set_register(int number, WORD value);
     int step();

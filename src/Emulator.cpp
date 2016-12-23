@@ -54,6 +54,14 @@ void Emulator::store_word(WORD word, ADDRESS addr) {
     memory[addr + 3] = word >> 24;
 }
 
+BYTE Emulator::load_byte(ADDRESS addr) {
+    return memory[addr];
+}
+
+void Emulator::store_byte(BYTE byte, ADDRESS addr) {
+    memory[addr] = byte;
+}
+
 WORD Emulator::get_register(int number) {
     if(number == 0) return 0;
     else return registers[number - 1];
