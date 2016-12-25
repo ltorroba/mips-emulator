@@ -173,6 +173,39 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
         }
     }
 
+    SECTION("sllv") {
+        WORD program[1];
+
+        SECTION("functions as identity/NOP when register value is 0") {
+            program[0] = Utilities::R_instruction(0x00, 2, 0, 1, 0, 0x04); // sllv r2, r1, r0
+            vm = new Emulator(128, program, 1);
+            vm->set_register(1, 0b1111);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 0b1111);
+        }
+
+        SECTION("functions as expected") {
+            program[0] = Utilities::R_instruction(0x00, 2, 3, 1, 0, 0x04); // sllv r2, r1, r3
+            vm = new Emulator(128, program, 1);
+            vm->set_register(1, 0b1111);
+            vm->set_register(3, 2);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 0b111100);
+        }
+
+        SECTION("uses only lowest 5 least-significant register bits") {
+            program[0] = Utilities::R_instruction(0x00, 2, 3, 1, 0, 0x04); // sllv r2, r1, r3
+            vm = new Emulator(128, program, 1);
+            vm->set_register(1, 0xffffffff);
+            vm->set_register(3, 0b100100); // should interpret as 4 and not 68
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 0xfffffff0);
+        }
+    }
+
     SECTION("add") {
         WORD program[1];
         program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 0x20); // add r3, r1, r2
