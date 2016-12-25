@@ -8,6 +8,8 @@ typedef unsigned char BYTE;
 class Emulator {
     BYTE* memory;
     REGISTER PC;
+    REGISTER HI;
+    REGISTER LO;
     REGISTER registers[31];
     size_t memory_size;
 

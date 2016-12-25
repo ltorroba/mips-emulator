@@ -159,6 +159,18 @@ int Emulator::step() {
                 case 0b001101: // break
                     return exception;
                     break;
+                case 0b010000: // mfhi
+                    set_register(rd, HI);
+                    break;
+                case 0b010001: // mthi
+                    HI = get_register(rs);
+                    break;
+                case 0b010010: // mflo
+                    set_register(rd, LO);
+                    break;
+                case 0b010011: // mtlo
+                    LO = get_register(rs);
+                    break;
                 case 0b100000: // add (traps on overflow)
                     if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) | (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
                         // Overflow occurred, trap

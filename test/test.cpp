@@ -441,6 +441,34 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
         }
     }
 
+    SECTION("mfhi and mthi") {
+        WORD program[2];
+        program[0] = Utilities::R_instruction(0x00, 0, 1, 0, 0, 17); // mthi r1
+        program[1] = Utilities::R_instruction(0x00, 2, 0, 0, 0, 16); // mfhi r2
+        vm = new Emulator(128, program, 2);
+        vm->set_register(1, 10);
+
+        SECTION("function as expected") {
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 10);
+        }
+    }
+
+    SECTION("mflo and mtlo") {
+        WORD program[2];
+        program[0] = Utilities::R_instruction(0x00, 0, 1, 0, 0, 19); // mtlo r1
+        program[1] = Utilities::R_instruction(0x00, 2, 0, 0, 0, 18); // mflo r2
+        vm = new Emulator(128, program, 2);
+        vm->set_register(1, 10);
+
+        SECTION("function as expected") {
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 10);
+        }
+    }
+
     SECTION("addu") {
         WORD program[1];
         program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 0x21); // addu r3, r1, r2
