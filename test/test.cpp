@@ -109,7 +109,6 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
             REQUIRE(vm->step() == 0);
             REQUIRE(vm->get_register(2) == 0b111100000);
         }
-
     }
 
     SECTION("add") {
