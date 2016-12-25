@@ -431,6 +431,16 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
         }
     }
 
+    SECTION("break") {
+        WORD program[1];
+        program[0] = Utilities::R_instruction(0x00, 0, 0b10000, 0, 0b10010, 0x0d); // break 0x80012
+        vm = new Emulator(128, program, 1);
+
+        SECTION("functions as expected") {
+            REQUIRE(vm->step() == 0b10000000000000010010);
+        }
+    }
+
     SECTION("addu") {
         WORD program[1];
         program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 0x21); // addu r3, r1, r2

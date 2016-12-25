@@ -117,6 +117,9 @@ int Emulator::step() {
     signed int Rss = *(REGISTER*)&Rs;
     signed int Rts = *(REGISTER*)&Rt;
 
+    // Exception
+    WORD exception = (rs << 15) | (rt << 10) | (rd << 5) | shamt;
+
     switch(opcode) {
         case 0b000000: // ALU
             switch(func) {
@@ -152,6 +155,9 @@ int Emulator::step() {
                 case 0b001011: // movn
                     if(get_register(rt) != 0)
                         set_register(rd, Rs);
+                    break;
+                case 0b001101: // break
+                    return exception;
                     break;
                 case 0b100000: // add (traps on overflow)
                     if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) | (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
