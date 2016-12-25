@@ -138,6 +138,9 @@ int Emulator::step() {
                 case 0b000111: // srav
                     set_register(rd, Rts >> (Rs & 0b11111));
                     break;
+                case 0b001000: // jr
+                    PC = Rs - 4;
+                    break;
                 case 0b100000: // add (traps on overflow)
                     if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) | (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
                         // Overflow occurred, trap
