@@ -111,6 +111,37 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
         }
     }
 
+    SECTION("srl") {
+        WORD program[1];
+
+        SECTION("functions as identity/NOP when shift is 0") {
+            program[0] = Utilities::R_instruction(0x00, 2, 0, 1, 0, 0x02); // srl r2, r1, 0
+            vm = new Emulator(128, program, 1);
+            vm->set_register(1, 0b1111);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 0b1111);
+        }
+
+        SECTION("functions as expected") {
+            program[0] = Utilities::R_instruction(0x00, 2, 0, 1, 2, 0x02); // srl r2, r1, 2
+            vm = new Emulator(128, program, 1);
+            vm->set_register(1, 0b1111);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 0b11);
+        }
+
+        SECTION("does not sign-extend") {
+            program[0] = Utilities::R_instruction(0x00, 2, 0, 1, 4, 0x02); // srl r2, r1, 2
+            vm = new Emulator(128, program, 1);
+            vm->set_register(1, 0xffffffff);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 0x0fffffff);
+        }
+    }
+
     SECTION("add") {
         WORD program[1];
         program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 0x20); // add r3, r1, r2
