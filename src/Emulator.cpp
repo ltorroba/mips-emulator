@@ -126,6 +126,9 @@ int Emulator::step() {
                 case 0b000010: // srl
                     set_register(rd, Rt >> shamt);
                     break;
+                case 0b000011: // sra
+                    set_register(rd, Rts >> shamt);
+                    break;
                 case 0b100000: // add (traps on overflow)
                     if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) | (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
                         // Overflow occurred, trap
