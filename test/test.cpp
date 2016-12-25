@@ -329,6 +329,28 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
         }
     }
 
+    SECTION("movz") {
+        WORD program[1];
+
+        SECTION("executes when condition is zero") {
+            program[0] = Utilities::R_instruction(0x00, 1, 2, 0, 0, 0x0a); // movz r1, r2, r0
+            vm = new Emulator(128, program, 1);
+            vm->set_register(2, 10);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(1) == 10);
+        }
+
+        SECTION("does not execute when condition is non-zero") {
+            program[0] = Utilities::R_instruction(0x00, 1, 2, 2, 0, 0x0a); // movz r1, r2, r2
+            vm = new Emulator(128, program, 1);
+            vm->set_register(2, 10);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(1) == 0);
+        }
+    }
+
     SECTION("add") {
         WORD program[1];
         program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 0x20); // add r3, r1, r2

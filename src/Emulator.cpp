@@ -145,6 +145,10 @@ int Emulator::step() {
                     set_register(31, PC + 4);
                     PC = Rs - 4;
                     break;
+                case 0b001010: // movz
+                    if(get_register(rt) == 0)
+                        set_register(rd, Rs);
+                    break;
                 case 0b100000: // add (traps on overflow)
                     if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) | (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
                         // Overflow occurred, trap
