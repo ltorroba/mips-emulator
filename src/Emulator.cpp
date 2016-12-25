@@ -132,6 +132,9 @@ int Emulator::step() {
                 case 0b000100: // sllv
                     set_register(rd, Rt << (Rs & 0b11111));
                     break;
+                case 0b000110: // srlv
+                    set_register(rd, Rt >> (Rs & 0b11111));
+                    break;
                 case 0b100000: // add (traps on overflow)
                     if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) | (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
                         // Overflow occurred, trap
