@@ -241,6 +241,10 @@ int Emulator::step() {
                     if(Rss >= Rts)
                         return 1;
                     break;
+                case 0b110001: // tgeu
+                    if(Rs >= Rt)
+                        return 1;
+                    break;
             }
             break;
     }
