@@ -237,6 +237,10 @@ int Emulator::step() {
                     else
                         set_register(rd, 0);
                     break;
+                case 0b110000: // tge
+                    if(Rss >= Rts)
+                        return 1;
+                    break;
             }
             break;
     }
