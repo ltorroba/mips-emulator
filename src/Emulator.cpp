@@ -275,6 +275,10 @@ int Emulator::step() {
             if(Rs == Rt)
                 PC += (imm << 2) - 4;
             break;
+        case 0b000101: // bne
+            if(Rs != Rt)
+                PC += (imm << 2) - 4;
+            break;
     }
 
     PC = PC + 4;
