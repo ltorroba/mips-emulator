@@ -515,6 +515,165 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
         }
     }
 
+    SECTION("div") {
+        WORD program[3];
+        program[0] = Utilities::R_instruction(0x00, 0, 1, 2, 0, 26); // div r1, r2
+        program[1] = Utilities::R_instruction(0x00, 3, 0, 0, 0, 16); // mfhi r3
+        program[2] = Utilities::R_instruction(0x00, 4, 0, 0, 0, 18); // mflo r4
+
+        SECTION("divide two positive numbers") {
+            SECTION("no remainder") {
+                vm = new Emulator(128, program, 3);
+                vm->set_register(1, 16);
+                vm->set_register(2, 4);
+
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+
+                SECTION("high bits (remainder) set correctly") {
+                    REQUIRE(vm->get_register(3) == 0);
+                }
+
+                SECTION("low bits (quotient) set correctly") {
+                    REQUIRE(vm->get_register(4) == 4);
+                }
+            }
+
+            SECTION("with remainder") {
+                vm = new Emulator(128, program, 3);
+                vm->set_register(1, 16);
+                vm->set_register(2, 3);
+
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+
+                SECTION("high bits (remainder) set correctly") {
+                    REQUIRE(vm->get_register(3) == 1);
+                }
+
+                SECTION("low bits (quotient) set correctly") {
+                    REQUIRE(vm->get_register(4) == 5);
+                }
+            }
+        }
+
+        SECTION("divide positive by negative number") {
+            SECTION("no remainder") {
+                vm = new Emulator(128, program, 3);
+                vm->set_register(1, 16);
+                vm->set_register(2, -4);
+
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+
+                SECTION("high bits (remainder) set correctly") {
+                    REQUIRE(vm->get_register(3) == 0);
+                }
+
+                SECTION("low bits (quotient) set correctly") {
+                    REQUIRE((signed)vm->get_register(4) == -4);
+                }
+            }
+
+            SECTION("with remainder") {
+                vm = new Emulator(128, program, 3);
+                vm->set_register(1, 16);
+                vm->set_register(2, -3);
+
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+
+                SECTION("high bits (remainder) set correctly") {
+                    REQUIRE(vm->get_register(3) == 1);
+                }
+
+                SECTION("low bits (quotient) set correctly") {
+                    REQUIRE((signed)vm->get_register(4) == -5);
+                }
+            }
+        }
+
+        SECTION("divide negative by positive number") {
+            SECTION("no remainder") {
+                vm = new Emulator(128, program, 3);
+                vm->set_register(1, -16);
+                vm->set_register(2, 4);
+
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+
+                SECTION("high bits (remainder) set correctly") {
+                    REQUIRE(vm->get_register(3) == 0);
+                }
+
+                SECTION("low bits (quotient) set correctly") {
+                    REQUIRE((signed)vm->get_register(4) == -4);
+                }
+            }
+
+            SECTION("with remainder") {
+                vm = new Emulator(128, program, 3);
+                vm->set_register(1, -16);
+                vm->set_register(2, 3);
+
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+
+                SECTION("high bits (remainder) set correctly") {
+                    REQUIRE((signed)vm->get_register(3) == -1);
+                }
+
+                SECTION("low bits (quotient) set correctly") {
+                    REQUIRE((signed)vm->get_register(4) == -5);
+                }
+            }
+        }
+
+        SECTION("divide two negative numbers") {
+            SECTION("no remainder") {
+                vm = new Emulator(128, program, 3);
+                vm->set_register(1, -16);
+                vm->set_register(2, -4);
+
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+
+                SECTION("high bits (remainder) set correctly") {
+                    REQUIRE(vm->get_register(3) == 0);
+                }
+
+                SECTION("low bits (quotient) set correctly") {
+                    REQUIRE(vm->get_register(4) == 4);
+                }
+            }
+
+            SECTION("with remainder") {
+                vm = new Emulator(128, program, 3);
+                vm->set_register(1, -16);
+                vm->set_register(2, -3);
+
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+                REQUIRE(vm->step() == 0);
+
+                SECTION("high bits (remainder) set correctly") {
+                    REQUIRE((signed)vm->get_register(3) == -1);
+                }
+
+                SECTION("low bits (quotient) set correctly") {
+                    REQUIRE(vm->get_register(4) == 5);
+                }
+            }
+        }
+    }
+
     SECTION("add") {
         WORD program[1];
         program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 0x20); // add r3, r1, r2

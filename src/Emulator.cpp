@@ -185,6 +185,10 @@ int Emulator::step() {
                         HI = result >> 32;
                     }
                     break;
+                case 0b11010: // div
+                    LO = Rss / Rts;
+                    HI = Rss % Rts;
+                    break;
                 case 0b100000: // add (traps on overflow)
                     if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) | (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
                         // Overflow occurred, trap
