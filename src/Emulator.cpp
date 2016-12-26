@@ -178,6 +178,13 @@ int Emulator::step() {
                         HI = result >> 32;
                     }
                     break;
+                case 0b011001: // multu
+                    {
+                        unsigned long long int result = (unsigned long long int)Rs * (unsigned long long int)Rt;
+                        LO = result;
+                        HI = result >> 32;
+                    }
+                    break;
                 case 0b100000: // add (traps on overflow)
                     if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) | (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
                         // Overflow occurred, trap
