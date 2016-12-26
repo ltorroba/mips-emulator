@@ -20,6 +20,5 @@ TEST_CASE("Test J-Type instructions", "[step][J-type]") {
             REQUIRE(vm->step() == 0);
             REQUIRE(vm->get_register(1) == 18);
         }
-
     }
 }
