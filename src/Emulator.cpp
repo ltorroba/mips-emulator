@@ -257,6 +257,10 @@ int Emulator::step() {
                     if(Rs == Rt)
                         return 1;
                     break;
+                case 0b110110: // tne
+                    if(Rs != Rt)
+                        return 1;
+                    break;
             }
             break;
     }
