@@ -231,6 +231,12 @@ int Emulator::step() {
                     else
                         set_register(rd, 0);
                     break;
+                case 0b101011: // sltu
+                    if(Rs < Rt)
+                        set_register(rd, 1);
+                    else
+                        set_register(rd, 0);
+                    break;
             }
             break;
     }
