@@ -795,4 +795,62 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
             REQUIRE(vm->get_register(3) == 0x7FFFFFFF);
         }
     }
+
+    SECTION("sub") {
+        WORD program[1];
+        program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 34); // sub r3, r1, r2
+        vm = new Emulator(128, program, 1);
+
+        SECTION("functions as expected with positive, normal input") {
+            vm->set_register(1, 2);
+            vm->set_register(2, 3);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(3) == -1);
+        }
+
+        SECTION("functions as expected with negative, normal input") {
+            vm->set_register(1, -2);
+            vm->set_register(2, -3);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(3) == 1);
+        }
+
+        SECTION("functions as expected with mixed, normal input") {
+            vm->set_register(1, -2);
+            vm->set_register(2, 3);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(3) == -5);
+        }
+
+        SECTION("traps on overflow") {
+            vm->set_register(1, 0x7FFFFFFF);
+            vm->set_register(2, -1);
+
+            REQUIRE(vm->step() == 1);
+        }
+
+        SECTION("doesn't trap on overflow bound") {
+            vm->set_register(1, 0x7FFFFFFF);
+            vm->set_register(2, 0);
+
+            REQUIRE(vm->step() == 0);
+        }
+
+        SECTION("traps on underflow") {
+            vm->set_register(1, 0x80000000);
+            vm->set_register(2, 1);
+
+            REQUIRE(vm->step() == 1);
+        }
+
+        SECTION("doesn't trap on underflow bound") {
+            vm->set_register(1, 0x80000000);
+            vm->set_register(2, 0);
+
+            REQUIRE(vm->step() == 0);
+        }
+    }
 }
