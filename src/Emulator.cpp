@@ -267,6 +267,10 @@ int Emulator::step() {
         case 0b000010: // j
             PC = pseudo_addr - 4;
             break;
+        case 0b000011: // jal
+            set_register(31, PC + 4);
+            PC = pseudo_addr - 4;
+            break;
     }
 
     PC = PC + 4;
