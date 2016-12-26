@@ -210,6 +210,9 @@ int Emulator::step() {
                     }
                     set_register(rd, Rss - Rts);
                     break;
+                case 0b100011: // subu
+                    set_register(rd, Rss - Rts);
+                    break;
             }
             break;
     }
