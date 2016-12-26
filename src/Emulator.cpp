@@ -213,6 +213,8 @@ int Emulator::step() {
                 case 0b100011: // subu
                     set_register(rd, Rss - Rts);
                     break;
+                case 0b100100: // and
+                    set_register(rd, Rs & Rt);
             }
             break;
     }
