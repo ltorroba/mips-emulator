@@ -411,6 +411,67 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
         }
     }
 
+    SECTION("mult") {
+        WORD program[3];
+        program[0] = Utilities::R_instruction(0x00, 0, 1, 2, 0, 24); // mult r1, r2
+        program[1] = Utilities::R_instruction(0x00, 3, 0, 0, 0, 16); // mfhi r3
+        program[2] = Utilities::R_instruction(0x00, 4, 0, 0, 0, 18); // mflo r4
+
+        SECTION("two positive numbers multiplication works correctly") {
+            vm = new Emulator(128, program, 3);
+            vm->set_register(1, 0x7fffffff);
+            vm->set_register(2, 32);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->step() == 0);
+
+            SECTION("high bits set correctly") {
+                REQUIRE(vm->get_register(3) == 0b1111);
+            }
+
+            SECTION("low bits set correctly") {
+                REQUIRE(vm->get_register(4) == 0xffffffe0);
+            }
+        }
+
+        SECTION("mixed numbers multiplication works correctly") {
+            vm = new Emulator(128, program, 3);
+            vm->set_register(1, 0x7fffffff);
+            vm->set_register(2, 0xfffffff0); // -16
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->step() == 0);
+
+            SECTION("high bits set correctly") {
+                REQUIRE(vm->get_register(3) == 0xfffffff8);
+            }
+
+            SECTION("low bits set correctly") {
+                REQUIRE(vm->get_register(4) == 0x00000010);
+            }
+        }
+
+        SECTION("negative numbers multiplication works correctly") {
+            vm = new Emulator(128, program, 3);
+            vm->set_register(1, 0xffffffff); // -1
+            vm->set_register(2, 0xfffffff0); // -16
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->step() == 0);
+
+            SECTION("high bits set correctly") {
+                REQUIRE(vm->get_register(3) == 0x0);
+            }
+
+            SECTION("low bits set correctly") {
+                REQUIRE(vm->get_register(4) == 0x10);
+            }
+        }
+    }
+
     SECTION("add") {
         WORD program[1];
         program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 0x20); // add r3, r1, r2

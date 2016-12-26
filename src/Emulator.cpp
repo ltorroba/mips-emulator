@@ -171,6 +171,13 @@ int Emulator::step() {
                 case 0b010011: // mtlo
                     LO = get_register(rs);
                     break;
+                case 0b011000: // mult
+                    {
+                        long long int result = (long long int)Rss * (long long int)Rts;
+                        LO = result;
+                        HI = result >> 32;
+                    }
+                    break;
                 case 0b100000: // add (traps on overflow)
                     if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) | (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
                         // Overflow occurred, trap
