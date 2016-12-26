@@ -1092,7 +1092,7 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
         program[0] = Utilities::R_instruction(0x00, 0, 1, 2, 0, 50); // tlt r1, r2
         vm = new Emulator(128, program, 1);
 
-        SECTION("traps when less that") {
+        SECTION("traps when less than") {
             vm->set_register(1, 3);
             vm->set_register(2, 5);
 
@@ -1126,7 +1126,7 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
         program[0] = Utilities::R_instruction(0x00, 0, 1, 2, 0, 51); // tltu r1, r2
         vm = new Emulator(128, program, 1);
 
-        SECTION("traps when less that") {
+        SECTION("traps when less than") {
             vm->set_register(1, 3);
             vm->set_register(2, 5);
 
