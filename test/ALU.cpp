@@ -1086,4 +1086,38 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
             REQUIRE(vm->step() == 1);
         }
     }
+
+    SECTION("tlt") {
+        WORD program[1];
+        program[0] = Utilities::R_instruction(0x00, 0, 1, 2, 0, 50); // tlt r1, r2
+        vm = new Emulator(128, program, 1);
+
+        SECTION("traps when less that") {
+            vm->set_register(1, 3);
+            vm->set_register(2, 5);
+
+            REQUIRE(vm->step() == 1);
+        }
+
+        SECTION("doesn't trap when equal") {
+            vm->set_register(1, 5);
+            vm->set_register(2, 5);
+
+            REQUIRE(vm->step() == 0);
+        }
+
+        SECTION("doesn't trap when greater") {
+            vm->set_register(1, 5);
+            vm->set_register(2, 3);
+
+            REQUIRE(vm->step() == 0);
+        }
+
+        SECTION("interprets signed values correctly") {
+            vm->set_register(1, 0xffffffff);
+            vm->set_register(2, 3);
+
+            REQUIRE(vm->step() == 1);
+        }
+    }
 }
