@@ -222,6 +222,9 @@ int Emulator::step() {
                 case 0b100110: // xor
                     set_register(rd, Rs ^ Rt);
                     break;
+                case 0b100111: // nor
+                    set_register(rd, ~(Rs | Rt));
+                    break;
             }
             break;
     }
