@@ -107,7 +107,8 @@ int Emulator::step() {
     int imm = instruction & 65535; // 16 lower bits
 
     // J-type (pseudo address is 26 bit, shifted by 2, and top 6 bits same as current PC)
-    int pseudo_addr = (PC & (0b111111 << 26)) | (instruction & 0x3FFFFFF); // 0x3FFFFFF is 26 lower bits set
+    // 0x3FFFFFF is 26 lower bits set
+    int pseudo_addr = (PC & (0b111111 << 26)) | ((instruction & 0x3FFFFFF) << 2);
 
     // Register values (unsigned)
     REGISTER Rs = get_register(rs);
@@ -262,6 +263,9 @@ int Emulator::step() {
                         return 1;
                     break;
             }
+            break;
+        case 0b000010: // j
+            PC = pseudo_addr - 4;
             break;
     }
 
