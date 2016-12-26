@@ -249,6 +249,10 @@ int Emulator::step() {
                     if(Rss < Rts)
                         return 1;
                     break;
+                case 0b110011: // tltu
+                    if(Rs < Rt)
+                        return 1;
+                    break;
             }
             break;
     }
