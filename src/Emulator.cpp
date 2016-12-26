@@ -271,6 +271,10 @@ int Emulator::step() {
             set_register(31, PC + 4);
             PC = pseudo_addr - 4;
             break;
+        case 0b000100: // beq
+            if(Rs == Rt)
+                PC += (imm << 2) - 4;
+            break;
     }
 
     PC = PC + 4;
