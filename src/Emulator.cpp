@@ -203,7 +203,7 @@ int Emulator::step() {
                 case 0b100001: // addu
                     set_register(rd, Rss + Rts);
                     break;
-                case 0b100010: // add (traps on overflow)
+                case 0b100010: // sub (traps on overflow)
                     if((Rss > 0 && Rts < 0 && (Rss - Rts) < 0) | (Rss < 0 && Rts > 0 && (Rss - Rts) > 0)) {
                         // Overflow occurred, trap
                         return 1;
