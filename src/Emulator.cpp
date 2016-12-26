@@ -219,7 +219,7 @@ int Emulator::step() {
                 case 0b100101: // or
                     set_register(rd, Rs | Rt);
                     break;
-                case 0b100110: // or
+                case 0b100110: // xor
                     set_register(rd, Rs ^ Rt);
                     break;
             }
