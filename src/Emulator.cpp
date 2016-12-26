@@ -225,6 +225,12 @@ int Emulator::step() {
                 case 0b100111: // nor
                     set_register(rd, ~(Rs | Rt));
                     break;
+                case 0b101010: // slt
+                    if(Rss < Rts)
+                        set_register(rd, 1);
+                    else
+                        set_register(rd, 0);
+                    break;
             }
             break;
     }
