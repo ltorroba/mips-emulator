@@ -927,4 +927,18 @@ TEST_CASE("Test ALU operations", "[step][ALU]") {
             REQUIRE(vm->get_register(3) == 0b10111);
         }
     }
+
+    SECTION("xor") {
+        WORD program[1];
+        program[0] = Utilities::R_instruction(0x00, 3, 1, 2, 0, 38); // xor r3, r1, r2
+        vm = new Emulator(128, program, 1);
+
+        SECTION("functions as expected") {
+            vm->set_register(1, 0b10011);
+            vm->set_register(2, 0b00101);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(3) == 0b10110);
+        }
+    }
 }
