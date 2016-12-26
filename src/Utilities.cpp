@@ -22,3 +22,14 @@ WORD Utilities::J_instruction(int opcode, int pseudo_addr) {
 
     return instruction;
 }
+
+WORD Utilities::I_instruction(int opcode, int rt, int rs, int imm) {
+    WORD instruction = 0x0;
+
+    instruction |= (opcode & 0b111111) << 26;
+    instruction |= (rs & 0b11111) << 21;
+    instruction |= (rt & 0b11111) << 16;
+    instruction |= imm & 0xffff;
+
+    return instruction;
+}
