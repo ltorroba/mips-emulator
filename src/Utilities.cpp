@@ -18,7 +18,7 @@ WORD Utilities::J_instruction(int opcode, int pseudo_addr) {
     WORD instruction = 0x0;
 
     instruction |= (opcode & 0b111111) << 26;
-    instruction |= opcode & 0x3FFFFFF;
+    instruction |= pseudo_addr & 0x3FFFFFF;
 
     return instruction;
 }
