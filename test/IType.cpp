@@ -71,4 +71,43 @@ TEST_CASE("Test I-Type instructions", "[step][I-type]") {
             REQUIRE(vm->get_register(1) == -3);
         }
     }
+
+    SECTION("slti") {
+        WORD program[1];
+        program[0] = Utilities::I_instruction(10, 2, 1, 30); // slti r2, r1, 30
+        vm = new Emulator(128, program, 1);
+
+        SECTION("sets when appropriate (2 +ve values)") {
+            vm->set_register(1, 3);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 1);
+        }
+
+        SECTION("doesn't set when appropriate (2 +ve values)") {
+            vm->set_register(2, 1);
+            vm->set_register(1, 33);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 0);
+        }
+
+        SECTION("interprets signed values correctly") {
+            vm->set_register(1, 0xffffffff);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 1);
+        }
+
+        SECTION("immediate is sign-extended") {
+            program[0] = Utilities::I_instruction(10, 2, 1, 0xffff); // slti r1, -1(-4)
+
+            vm = new Emulator(128, program, 1);
+            vm->set_register(1, -2000);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 1);
+        }
+    }
+
 }
