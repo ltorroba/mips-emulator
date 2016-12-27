@@ -228,16 +228,10 @@ int Emulator::step() {
                     set_register(rd, ~(Rs | Rt));
                     break;
                 case 0b101010: // slt
-                    if(Rss < Rts)
-                        set_register(rd, 1);
-                    else
-                        set_register(rd, 0);
+                    set_register(rd, Rss < Rts);
                     break;
                 case 0b101011: // sltu
-                    if(Rs < Rt)
-                        set_register(rd, 1);
-                    else
-                        set_register(rd, 0);
+                    set_register(rd, Rs < Rt);
                     break;
                 case 0b110000: // tge
                     if(Rss >= Rts)
