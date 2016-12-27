@@ -105,6 +105,7 @@ int Emulator::step() {
 
     // I-type instruction (rs, rt as above)
     int imm = instruction & 65535; // 16 lower bits
+    int se_imm = ((instruction & 0x8000) != 0) ? (0xffff << 16) | imm : imm;
 
     // J-type (pseudo address is 26 bit, shifted by 2, and top 6 bits same as current PC)
     // 0x3FFFFFF is 26 lower bits set
@@ -273,15 +274,15 @@ int Emulator::step() {
             break;
         case 0b000100: // beq
             if(Rs == Rt)
-                PC += (imm << 2) - 4;
+                PC += (se_imm << 2) - 4;
             break;
         case 0b000101: // bne
             if(Rs != Rt)
-                PC += (imm << 2) - 4;
+                PC += (se_imm << 2) - 4;
             break;
         case 0b000110: // blez
             if(Rss <= 0)
-                PC += (imm << 2) - 4;
+                PC += (se_imm << 2) - 4;
             break;
     }
 
