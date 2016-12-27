@@ -288,6 +288,12 @@ int Emulator::step() {
             if(Rss > 0)
                 PC += (se_imm << 2) - 4;
             break;
+        case 0b001000: // addi (with overflow)
+            if((Rts > 0 && se_imm > 0 && (Rts + se_imm) < 0) | (Rts < 0 && se_imm < 0 && (Rts + se_imm) > 0)) {
+                return 1;
+            }
+            set_register(rs, Rts + se_imm);
+            break;
     }
 
     PC = PC + 4;
