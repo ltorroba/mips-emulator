@@ -303,6 +303,12 @@ int Emulator::step() {
             else
                 set_register(rt, 0);
             break;
+        case 0b001011: // sltiu
+            if(Rss < imm)
+                set_register(rt, 1);
+            else
+                set_register(rt, 0);
+            break;
     }
 
     PC = PC + 4;
