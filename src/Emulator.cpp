@@ -298,16 +298,10 @@ int Emulator::step() {
             set_register(rt, Rss + se_imm);
             break;
         case 0b001010: // slti
-            if(Rss < se_imm)
-                set_register(rt, 1);
-            else
-                set_register(rt, 0);
+            set_register(rt, Rss < se_imm);
             break;
         case 0b001011: // sltiu
-            if(Rss < imm)
-                set_register(rt, 1);
-            else
-                set_register(rt, 0);
+            set_register(rt, Rss < imm);
             break;
         case 0b001100: // andi
             set_register(rt, Rs & imm);
