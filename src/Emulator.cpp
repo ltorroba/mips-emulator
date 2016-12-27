@@ -289,19 +289,19 @@ int Emulator::step() {
                 PC += (se_imm << 2) - 4;
             break;
         case 0b001000: // addi (with overflow)
-            if((Rts > 0 && se_imm > 0 && (Rts + se_imm) < 0) | (Rts < 0 && se_imm < 0 && (Rts + se_imm) > 0)) {
+            if((Rss > 0 && se_imm > 0 && (Rss + se_imm) < 0) | (Rss < 0 && se_imm < 0 && (Rss + se_imm) > 0)) {
                 return 1;
             }
-            set_register(rs, Rts + se_imm);
+            set_register(rt, Rss + se_imm);
             break;
         case 0b001001: // addiu
-            set_register(rs, Rts + se_imm);
+            set_register(rt, Rss + se_imm);
             break;
         case 0b001010: // slti
-            if(Rts < se_imm)
-                set_register(rs, 1);
+            if(Rss < se_imm)
+                set_register(rt, 1);
             else
-                set_register(rs, 0);
+                set_register(rt, 0);
             break;
     }
 

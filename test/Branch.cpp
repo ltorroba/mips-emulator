@@ -94,7 +94,7 @@ TEST_CASE("Test Branch instructions", "[step][Branch]") {
 
     SECTION("blez") {
         WORD program[1];
-        program[0] = Utilities::I_instruction(6, 1, 0, 0b10); // blez r1, 2(+8)
+        program[0] = Utilities::I_instruction(6, 0, 1, 0b10); // blez r1, 2(+8)
         program[1] = Utilities::R_instruction(0x00, 1, 0, 1, 0, 0x20); // add r1, r0, r1
         program[2] = Utilities::R_instruction(0x00, 1, 1, 2, 0, 0x20); // add r1, r1, r2
 
@@ -132,7 +132,7 @@ TEST_CASE("Test Branch instructions", "[step][Branch]") {
             WORD program[4];
             program[0] = Utilities::J_instruction(2, 2); // j 2(12)
             program[1] = Utilities::R_instruction(0x00, 1, 1, 2, 0, 0x20); // add r1, r1, r2
-            program[2] = Utilities::I_instruction(6, 1, 0, 0xffff); // blez r1, -1(-4)
+            program[2] = Utilities::I_instruction(6, 0, 1, 0xffff); // blez r1, -1(-4)
             program[3] = Utilities::R_instruction(0x00, 1, 0, 1, 0, 0x20); // add r1, r0, r1
 
             vm = new Emulator(128, program, 3);
@@ -148,7 +148,7 @@ TEST_CASE("Test Branch instructions", "[step][Branch]") {
 
     SECTION("bgtz") {
         WORD program[1];
-        program[0] = Utilities::I_instruction(7, 1, 0, 0b10); // bgtz r1, 2(+8)
+        program[0] = Utilities::I_instruction(7, 0, 1, 0b10); // bgtz r1, 2(+8)
         program[1] = Utilities::R_instruction(0x00, 1, 0, 1, 0, 0x20); // add r1, r0, r1
         program[2] = Utilities::R_instruction(0x00, 1, 1, 2, 0, 0x20); // add r1, r1, r2
 
@@ -186,7 +186,7 @@ TEST_CASE("Test Branch instructions", "[step][Branch]") {
             WORD program[4];
             program[0] = Utilities::J_instruction(2, 2); // j 2(12)
             program[1] = Utilities::R_instruction(0x00, 1, 1, 2, 0, 0x20); // add r1, r1, r2
-            program[2] = Utilities::I_instruction(7, 1, 0, 0xffff); // blez r1, -1(-4)
+            program[2] = Utilities::I_instruction(7, 0, 1, 0xffff); // blez r1, -1(-4)
             program[3] = Utilities::R_instruction(0x00, 1, 0, 1, 0, 0x20); // add r1, r0, r1
 
             vm = new Emulator(128, program, 3);
