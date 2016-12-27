@@ -284,6 +284,10 @@ int Emulator::step() {
             if(Rss <= 0)
                 PC += (se_imm << 2) - 4;
             break;
+        case 0b000111: // bgtz
+            if(Rss > 0)
+                PC += (se_imm << 2) - 4;
+            break;
     }
 
     PC = PC + 4;
