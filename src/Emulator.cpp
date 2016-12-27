@@ -196,7 +196,7 @@ int Emulator::step() {
                     HI = Rs % Rt;
                     break;
                 case 0b100000: // add (traps on overflow)
-                    if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) | (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
+                    if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) || (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
                         // Overflow occurred, trap
                         return 1;
                     }
@@ -206,7 +206,7 @@ int Emulator::step() {
                     set_register(rd, Rss + Rts);
                     break;
                 case 0b100010: // sub (traps on overflow)
-                    if((Rss > 0 && Rts < 0 && (Rss - Rts) < 0) | (Rss < 0 && Rts > 0 && (Rss - Rts) > 0)) {
+                    if((Rss > 0 && Rts < 0 && (Rss - Rts) < 0) || (Rss < 0 && Rts > 0 && (Rss - Rts) > 0)) {
                         // Overflow occurred, trap
                         return 1;
                     }
@@ -283,7 +283,7 @@ int Emulator::step() {
                 PC += (se_imm << 2) - 4;
             break;
         case 0b001000: // addi (with overflow)
-            if((Rss > 0 && se_imm > 0 && (Rss + se_imm) < 0) | (Rss < 0 && se_imm < 0 && (Rss + se_imm) > 0)) {
+            if((Rss > 0 && se_imm > 0 && (Rss + se_imm) < 0) || (Rss < 0 && se_imm < 0 && (Rss + se_imm) > 0)) {
                 return 1;
             }
             set_register(rt, Rss + se_imm);
