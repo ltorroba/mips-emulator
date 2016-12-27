@@ -10,7 +10,7 @@ class Emulator {
     REGISTER PC;
     REGISTER HI;
     REGISTER LO;
-    REGISTER registers[31];
+    REGISTER* registers;
     size_t memory_size;
 
     void init(size_t mem_size, WORD* progam, size_t program_size);

@@ -10,17 +10,8 @@ using namespace std;
 void Emulator::init(size_t mem_size, WORD* program, size_t program_size) {
     memory_size = mem_size;
 
-    // TODO: Improve this (use memset?)
-    memory = new BYTE[memory_size];
-    for(size_t i = 0; i < memory_size; i++) {
-        memory[i] = 0;
-    }
-
-    // TODO: Improve, use memset?
-    for(size_t i = 0; i < 31; i++) {
-        registers[i] = 0;
-    }
-
+    memory = new BYTE[memory_size]();
+    registers = new REGISTER[31]();
     PC = 0;
 
     // Load program to first portion of memory
@@ -28,7 +19,6 @@ void Emulator::init(size_t mem_size, WORD* program, size_t program_size) {
         // TODO: Throw error
     }
 
-    // TODO: Improve this - use memcpy?
     for(size_t i = 0; i < program_size; i++) {
         store_word(program[i], i*4);
     }
