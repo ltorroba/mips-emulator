@@ -180,4 +180,17 @@ TEST_CASE("Test I-Type instructions", "[step][I-type]") {
             REQUIRE(vm->get_register(2) == 0xcccc6666);
         }
     }
+
+    SECTION("lui") {
+        WORD program[1];
+        program[0] = Utilities::I_instruction(15, 2, 1, 0xaaaa); // lui r2, r1, 0xaaaa
+        vm = new Emulator(128, program, 1);
+
+        SECTION("functions as expected") {
+            vm->set_register(1, 0xcccccccc);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(2) == 0xaaaacccc);
+        }
+    }
 }

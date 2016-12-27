@@ -318,6 +318,9 @@ int Emulator::step() {
         case 0b001110: // xori
             set_register(rt, Rs ^ imm);
             break;
+        case 0b001111: // lui
+            set_register(rt, (imm << 16) | (0xffff & Rs));
+            break;
     }
 
     PC = PC + 4;
