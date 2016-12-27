@@ -321,6 +321,13 @@ int Emulator::step() {
         case 0b001111: // lui
             set_register(rt, (imm << 16) | (0xffff & Rs));
             break;
+        case 0b010100: // lb
+            {
+                BYTE res = load_byte(Rs + se_imm);
+                REGISTER se_res = ((res & 0x80) != 0) ? (0xffffff << 8) | res : res;
+                set_register(rt, se_res);
+            }
+            break;
     }
 
     PC = PC + 4;
