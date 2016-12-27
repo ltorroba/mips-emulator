@@ -328,6 +328,18 @@ int Emulator::step() {
                 set_register(rt, se_res);
             }
             break;
+        case 0b010101: // lh
+            if((Rs + se_imm) & 0x1)
+                return 1; // Trap if not multiple of 2
+            else
+            {
+                WORD a = load_byte(Rs + se_imm);
+                WORD b = load_byte(Rs + se_imm + 1);
+                WORD res = a | (b << 8);
+                REGISTER se_res = ((res & 0x8000) != 0) ? (0xffff << 16) | res : res;
+                set_register(rt, se_res);
+            }
+            break;
     }
 
     PC = PC + 4;
