@@ -309,6 +309,9 @@ int Emulator::step() {
             else
                 set_register(rt, 0);
             break;
+        case 0b001100: // andi
+            set_register(rt, Rs & imm);
+            break;
     }
 
     PC = PC + 4;
