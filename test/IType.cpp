@@ -51,4 +51,24 @@ TEST_CASE("Test I-Type instructions", "[step][I-type]") {
             REQUIRE(vm->step() == 0);
         }
     }
+
+    SECTION("addiu") {
+        WORD program[1];
+        program[0] = Utilities::I_instruction(9, 1, 2, 30); // addiu r1, r2, 30
+        vm = new Emulator(128, program, 1);
+
+        SECTION("functions as expected with positive, normal input") {
+            vm->set_register(2, 3);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(1) == 33);
+        }
+
+        SECTION("functions as expected with negative, normal input") {
+            vm->set_register(2, -33);
+
+            REQUIRE(vm->step() == 0);
+            REQUIRE(vm->get_register(1) == -3);
+        }
+    }
 }

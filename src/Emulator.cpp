@@ -294,6 +294,9 @@ int Emulator::step() {
             }
             set_register(rs, Rts + se_imm);
             break;
+        case 0b001001: // addiu
+            set_register(rs, Rts + se_imm);
+            break;
     }
 
     PC = PC + 4;
