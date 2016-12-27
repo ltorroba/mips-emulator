@@ -144,7 +144,7 @@ TEST_CASE("Test I-Type instructions", "[step][I-type]") {
 
     SECTION("andi") {
         WORD program[1];
-        program[0] = Utilities::I_instruction(12, 2, 1, 0xaaaa); // andi r3, r1, r2
+        program[0] = Utilities::I_instruction(12, 2, 1, 0xaaaa); // andi r2, r1, 0xaaaa
         vm = new Emulator(128, program, 1);
 
         SECTION("functions as expected") {
@@ -157,7 +157,7 @@ TEST_CASE("Test I-Type instructions", "[step][I-type]") {
 
     SECTION("ori") {
         WORD program[1];
-        program[0] = Utilities::I_instruction(13, 2, 1, 0xaaaa); // ori r3, r1, r2
+        program[0] = Utilities::I_instruction(13, 2, 1, 0xaaaa); // ori r2, r1, 0xaaaa
         vm = new Emulator(128, program, 1);
 
         SECTION("functions as expected") {
