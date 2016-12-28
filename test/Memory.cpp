@@ -197,4 +197,41 @@ TEST_CASE("Test memory I/O instructions", "[step][Memory][I/O]") {
             REQUIRE(vm->get_register(4) == 0x000000aa);
         }
     }
+
+    SECTION("sw") {
+        WORD program[6];
+        program[0] = Utilities::I_instruction(43, 8, 5, 0); // sw r1, 0(r5)
+        program[1] = Utilities::I_instruction(32, 1, 5, 0); // lbu r1, 0(r5)
+        program[2] = Utilities::I_instruction(32, 2, 7, -3); // lbu r2, -3(r7)
+        program[3] = Utilities::I_instruction(32, 3, 5, 2); // lbu r3, 2(r5)
+        program[4] = Utilities::I_instruction(32, 4, 7, -1); // lbu r4, -1(r7)
+        program[5] = Utilities::I_instruction(43, 1, 5, 1); // sw r1, 0(r5)
+        program[6] = Utilities::I_instruction(43, 1, 5, 2); // sw r1, 0(r5)
+        program[7] = Utilities::I_instruction(43, 1, 5, 3); // sw r1, 0(r5)
+        vm = new Emulator(128, program, 8);
+
+        vm->set_register(5, 32);
+        vm->set_register(7, 36);
+        vm->set_register(8, 0x01020304);
+
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+
+        SECTION("functions as expected") {
+            REQUIRE(vm->get_register(1) == 0x04);
+            REQUIRE(vm->get_register(2) == 0x03);
+            REQUIRE(vm->get_register(3) == 0x02);
+            REQUIRE(vm->get_register(4) == 0x01);
+            REQUIRE(vm->load_word(32) == 0x01020304);
+        }
+
+        SECTION("traps on unaligned addresses (those that are not multiples of 4)") {
+            REQUIRE(vm->step() == 1);
+            REQUIRE(vm->step() == 1);
+            REQUIRE(vm->step() == 1);
+        }
+    }
 }
