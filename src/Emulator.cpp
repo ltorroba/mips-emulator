@@ -326,6 +326,13 @@ int Emulator::step() {
                 set_register(rt, aligned_word << (8 * left_shift));
             }
             break;
+        case 0b100011: // lw
+            if((Rs + se_imm) & 0x3)
+                return 1; // Trap if not multiple of 4
+            else
+            {
+                set_register(rt, load_word(Rs + se_imm));
+            }
         case 0b100110: // lwr
             {
                 ADDRESS effective_address = Rs + se_imm;
