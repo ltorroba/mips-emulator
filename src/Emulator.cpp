@@ -113,200 +113,200 @@ int Emulator::step() {
     WORD exception = (rs << 15) | (rt << 10) | (rd << 5) | shamt;
 
     switch(opcode) {
-        case 0b000000: // ALU
+        case 0: // ALU
             switch(func) {
-                case 0b000000: // sll
+                case 0: // sll
                     set_register(rd, Rt << shamt);
                     break;
-                case 0b000010: // srl
+                case 2: // srl
                     set_register(rd, Rt >> shamt);
                     break;
-                case 0b000011: // sra
+                case 3: // sra
                     set_register(rd, Rts >> shamt);
                     break;
-                case 0b000100: // sllv
+                case 4: // sllv
                     set_register(rd, Rt << (Rs & 0b11111));
                     break;
-                case 0b000110: // srlv
+                case 6: // srlv
                     set_register(rd, Rt >> (Rs & 0b11111));
                     break;
-                case 0b000111: // srav
+                case 7: // srav
                     set_register(rd, Rts >> (Rs & 0b11111));
                     break;
-                case 0b001000: // jr
+                case 8: // jr
                     PC = Rs - 4;
                     break;
-                case 0b001001: // jalr
+                case 9: // jalr
                     set_register(31, PC + 4);
                     PC = Rs - 4;
                     break;
-                case 0b001010: // movz
+                case 10: // movz
                     if(get_register(rt) == 0)
                         set_register(rd, Rs);
                     break;
-                case 0b001011: // movn
+                case 11: // movn
                     if(get_register(rt) != 0)
                         set_register(rd, Rs);
                     break;
-                case 0b001101: // break
+                case 13: // break
                     return exception;
                     break;
-                case 0b010000: // mfhi
+                case 16: // mfhi
                     set_register(rd, HI);
                     break;
-                case 0b010001: // mthi
+                case 17: // mthi
                     HI = get_register(rs);
                     break;
-                case 0b010010: // mflo
+                case 18: // mflo
                     set_register(rd, LO);
                     break;
-                case 0b010011: // mtlo
+                case 19: // mtlo
                     LO = get_register(rs);
                     break;
-                case 0b011000: // mult
+                case 24: // mult
                     {
                         long long int result = (long long int)Rss * (long long int)Rts;
                         LO = result;
                         HI = result >> 32;
                     }
                     break;
-                case 0b011001: // multu
+                case 25: // multu
                     {
                         unsigned long long int result = (unsigned long long int)Rs * (unsigned long long int)Rt;
                         LO = result;
                         HI = result >> 32;
                     }
                     break;
-                case 0b11010: // div
+                case 26: // div
                     LO = Rss / Rts;
                     HI = Rss % Rts;
                     break;
-                case 0b11011: // divu
+                case 27: // divu
                     LO = Rs / Rt;
                     HI = Rs % Rt;
                     break;
-                case 0b100000: // add (traps on overflow)
+                case 32: // add (traps on overflow)
                     if((Rss > 0 && Rts > 0 && (Rss + Rts) < 0) || (Rss < 0 && Rts < 0 && (Rss + Rts) > 0)) {
                         // Overflow occurred, trap
                         return 1;
                     }
                     set_register(rd, Rss + Rts);
                     break;
-                case 0b100001: // addu
+                case 33: // addu
                     set_register(rd, Rss + Rts);
                     break;
-                case 0b100010: // sub (traps on overflow)
+                case 34: // sub (traps on overflow)
                     if((Rss > 0 && Rts < 0 && (Rss - Rts) < 0) || (Rss < 0 && Rts > 0 && (Rss - Rts) > 0)) {
                         // Overflow occurred, trap
                         return 1;
                     }
                     set_register(rd, Rss - Rts);
                     break;
-                case 0b100011: // subu
+                case 35: // subu
                     set_register(rd, Rss - Rts);
                     break;
-                case 0b100100: // and
+                case 36: // and
                     set_register(rd, Rs & Rt);
                     break;
-                case 0b100101: // or
+                case 37: // or
                     set_register(rd, Rs | Rt);
                     break;
-                case 0b100110: // xor
+                case 38: // xor
                     set_register(rd, Rs ^ Rt);
                     break;
-                case 0b100111: // nor
+                case 39: // nor
                     set_register(rd, ~(Rs | Rt));
                     break;
-                case 0b101010: // slt
+                case 42: // slt
                     set_register(rd, Rss < Rts);
                     break;
-                case 0b101011: // sltu
+                case 43: // sltu
                     set_register(rd, Rs < Rt);
                     break;
-                case 0b110000: // tge
+                case 48: // tge
                     if(Rss >= Rts)
                         return 1;
                     break;
-                case 0b110001: // tgeu
+                case 49: // tgeu
                     if(Rs >= Rt)
                         return 1;
                     break;
-                case 0b110010: // tlt
+                case 50: // tlt
                     if(Rss < Rts)
                         return 1;
                     break;
-                case 0b110011: // tltu
+                case 51: // tltu
                     if(Rs < Rt)
                         return 1;
                     break;
-                case 0b110100: // teq
+                case 52: // teq
                     if(Rs == Rt)
                         return 1;
                     break;
-                case 0b110110: // tne
+                case 54: // tne
                     if(Rs != Rt)
                         return 1;
                     break;
             }
             break;
-        case 0b000010: // j
+        case 2: // j
             PC = pseudo_addr - 4;
             break;
-        case 0b000011: // jal
+        case 3: // jal
             set_register(31, PC + 4);
             PC = pseudo_addr - 4;
             break;
-        case 0b000100: // beq
+        case 4: // beq
             if(Rs == Rt)
                 PC += (se_imm << 2) - 4;
             break;
-        case 0b000101: // bne
+        case 5: // bne
             if(Rs != Rt)
                 PC += (se_imm << 2) - 4;
             break;
-        case 0b000110: // blez
+        case 6: // blez
             if(Rss <= 0)
                 PC += (se_imm << 2) - 4;
             break;
-        case 0b000111: // bgtz
+        case 7: // bgtz
             if(Rss > 0)
                 PC += (se_imm << 2) - 4;
             break;
-        case 0b001000: // addi (with overflow)
+        case 8: // addi (with overflow)
             if((Rss > 0 && se_imm > 0 && (Rss + se_imm) < 0) || (Rss < 0 && se_imm < 0 && (Rss + se_imm) > 0)) {
                 return 1;
             }
             set_register(rt, Rss + se_imm);
             break;
-        case 0b001001: // addiu
+        case 9: // addiu
             set_register(rt, Rss + se_imm);
             break;
-        case 0b001010: // slti
+        case 10: // slti
             set_register(rt, Rss < se_imm);
             break;
-        case 0b001011: // sltiu
+        case 11: // sltiu
             set_register(rt, Rss < imm);
             break;
-        case 0b001100: // andi
+        case 12: // andi
             set_register(rt, Rs & imm);
             break;
-        case 0b001101: // ori
+        case 13: // ori
             set_register(rt, Rs | imm);
             break;
-        case 0b001110: // xori
+        case 14: // xori
             set_register(rt, Rs ^ imm);
             break;
-        case 0b001111: // lui
+        case 15: // lui
             set_register(rt, (imm << 16) | (0xffff & Rs));
             break;
-        case 0b100000: // lb
+        case 32: // lb
             {
                 BYTE res = load_byte(Rs + se_imm);
                 REGISTER se_res = ((res & 0x80) != 0) ? (0xffffff << 8) | res : res;
                 set_register(rt, se_res);
             }
             break;
-        case 0b100001: // lh
+        case 33: // lh
             if((Rs + se_imm) & 0x1)
                 return 1; // Trap if not multiple of 2
             else
@@ -318,7 +318,7 @@ int Emulator::step() {
                 set_register(rt, se_res);
             }
             break;
-        case 0b100010: // lwl
+        case 34: // lwl
             {
                 ADDRESS effective_address = Rs + se_imm;
                 WORD aligned_word = load_word(effective_address & 0xfffffffc);
@@ -326,7 +326,7 @@ int Emulator::step() {
                 set_register(rt, aligned_word << (8 * left_shift));
             }
             break;
-        case 0b100011: // lw
+        case 35: // lw
             if((Rs + se_imm) & 0x3)
                 return 1; // Trap if not multiple of 4
             else
@@ -334,13 +334,13 @@ int Emulator::step() {
                 set_register(rt, load_word(Rs + se_imm));
             }
             break;
-        case 0b100100: // lbu
+        case 36: // lbu
             {
                 BYTE res = load_byte(Rs + se_imm);
                 set_register(rt, res);
             }
             break;
-        case 0b100101: // lhu
+        case 37: // lhu
             if((Rs + se_imm) & 0x1)
                 return 1; // Trap if not multiple of 2
             else
@@ -351,7 +351,7 @@ int Emulator::step() {
                 set_register(rt, res);
             }
             break;
-        case 0b100110: // lwr
+        case 38: // lwr
             {
                 ADDRESS effective_address = Rs + se_imm;
                 WORD aligned_word = load_word(effective_address & 0xfffffffc);
