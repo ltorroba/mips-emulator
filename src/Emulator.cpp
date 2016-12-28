@@ -299,14 +299,14 @@ int Emulator::step() {
         case 0b001111: // lui
             set_register(rt, (imm << 16) | (0xffff & Rs));
             break;
-        case 0b010100: // lb
+        case 0b100000: // lb
             {
                 BYTE res = load_byte(Rs + se_imm);
                 REGISTER se_res = ((res & 0x80) != 0) ? (0xffffff << 8) | res : res;
                 set_register(rt, se_res);
             }
             break;
-        case 0b010101: // lh
+        case 0b100001: // lh
             if((Rs + se_imm) & 0x1)
                 return 1; // Trap if not multiple of 2
             else
@@ -318,7 +318,7 @@ int Emulator::step() {
                 set_register(rt, se_res);
             }
             break;
-        case 0b010110: // lwl
+        case 0b100010: // lwl
             {
                 ADDRESS effective_address = Rs + se_imm;
                 WORD aligned_word = load_word(effective_address & 0xfffffffc);
@@ -326,7 +326,7 @@ int Emulator::step() {
                 set_register(rt, aligned_word << (8 * left_shift));
             }
             break;
-        case 0b011010: // lwr
+        case 0b100110: // lwr
             {
                 ADDRESS effective_address = Rs + se_imm;
                 WORD aligned_word = load_word(effective_address & 0xfffffffc);
