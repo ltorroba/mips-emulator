@@ -88,4 +88,28 @@ TEST_CASE("Test memory I/O instructions", "[step][Memory][I/O]") {
             REQUIRE(vm->get_register(4) == 0xaabbccdd);
         }
     }
+
+    SECTION("lwr") {
+        WORD program[5];
+        program[0] = Utilities::I_instruction(26, 1, 5, 0); // lwr r1, 0(r5)
+        program[1] = Utilities::I_instruction(26, 2, 5, 1); // lwr r2, 1(r5)
+        program[2] = Utilities::I_instruction(26, 3, 5, 2); // lwr r3, 2(r5)
+        program[3] = Utilities::I_instruction(26, 4, 5, 3); // lwr r4, 3(r5)
+        program[4] = 0xaabbccdd;
+        vm = new Emulator(128, program, 5);
+
+        vm->set_register(5, 16);
+
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+
+        SECTION("functions as expected") {
+            REQUIRE(vm->get_register(1) == 0xaabbccdd);
+            REQUIRE(vm->get_register(2) == 0x00aabbcc);
+            REQUIRE(vm->get_register(3) == 0x0000aabb);
+            REQUIRE(vm->get_register(4) == 0x000000aa);
+        }
+    }
 }
