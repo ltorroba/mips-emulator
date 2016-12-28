@@ -24,13 +24,13 @@ TEST_CASE("Test I-Type instructions", "[step][I-type]") {
         }
 
         SECTION("traps on overflow") {
-            vm->set_register(2, 0x7FFFFFFF);
+            vm->set_register(2, 0x7fffffff);
 
             REQUIRE(vm->step() == 1);
         }
 
         SECTION("doesn't trap on overflow bound") {
-            vm->set_register(2, 0x7FFFFFE1);
+            vm->set_register(2, 0x7fffffe1);
 
             REQUIRE(vm->step() == 0);
         }
