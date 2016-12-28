@@ -141,6 +141,39 @@ TEST_CASE("Test memory I/O instructions", "[step][Memory][I/O]") {
         }
     }
 
+    SECTION("lhu") {
+        WORD program[5];
+        program[0] = Utilities::I_instruction(37, 1, 5, 0); // lhu r1, 0(r5)
+        program[1] = Utilities::I_instruction(37, 2, 7, -4); // lhu r2, -4(r7)
+        program[2] = Utilities::I_instruction(37, 3, 5, 2); // lhu r3, 2(r5)
+        program[3] = Utilities::I_instruction(37, 4, 7, -2); // lhu r4, -2(r7)
+        program[4] = Utilities::I_instruction(37, 6, 7, 1); // lhu r6, 1(r7)
+        program[5] = 0x0108ddcc;
+        vm = new Emulator(128, program, 6);
+
+        vm->set_register(5, 20);
+        vm->set_register(7, 24);
+
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+
+        SECTION("functions as expected") {
+            REQUIRE(vm->get_register(3) == 0x0108);
+            REQUIRE(vm->get_register(4) == 0x0108);
+        }
+
+        SECTION("sign-extends loaded halfword") {
+            REQUIRE(vm->get_register(1) == 0x0000ddcc);
+            REQUIRE(vm->get_register(2) == 0x0000ddcc);
+        }
+
+        SECTION("traps on unaligned addresses (those that are not multiples of 2)") {
+            REQUIRE(vm->step() == 1);
+        }
+    }
+
     SECTION("lwr") {
         WORD program[5];
         program[0] = Utilities::I_instruction(38, 1, 5, 0); // lwr r1, 0(r5)

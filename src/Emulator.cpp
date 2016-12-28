@@ -340,6 +340,17 @@ int Emulator::step() {
                 set_register(rt, res);
             }
             break;
+        case 0b100101: // lhu
+            if((Rs + se_imm) & 0x1)
+                return 1; // Trap if not multiple of 2
+            else
+            {
+                WORD a = load_byte(Rs + se_imm);
+                WORD b = load_byte(Rs + se_imm + 1);
+                WORD res = a | (b << 8);
+                set_register(rt, res);
+            }
+            break;
         case 0b100110: // lwr
             {
                 ADDRESS effective_address = Rs + se_imm;
