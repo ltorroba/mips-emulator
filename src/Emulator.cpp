@@ -333,6 +333,13 @@ int Emulator::step() {
             {
                 set_register(rt, load_word(Rs + se_imm));
             }
+            break;
+        case 0b100100: // lbu
+            {
+                BYTE res = load_byte(Rs + se_imm);
+                set_register(rt, res);
+            }
+            break;
         case 0b100110: // lwr
             {
                 ADDRESS effective_address = Rs + se_imm;

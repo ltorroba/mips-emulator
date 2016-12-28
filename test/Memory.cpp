@@ -113,6 +113,34 @@ TEST_CASE("Test memory I/O instructions", "[step][Memory][I/O]") {
         }
     }
 
+    SECTION("lbu") {
+        WORD program[5];
+        program[0] = Utilities::I_instruction(36, 1, 5, 0); // lbu r1, 0(r5)
+        program[1] = Utilities::I_instruction(36, 2, 7, -3); // lbu r2, -3(r7)
+        program[2] = Utilities::I_instruction(36, 3, 5, 2); // lbu r3, 2(r5)
+        program[3] = Utilities::I_instruction(36, 4, 7, -1); // lbu r4, -1(r7)
+        program[4] = 0x0108ddcc;
+        vm = new Emulator(128, program, 5);
+
+        vm->set_register(5, 16);
+        vm->set_register(7, 20);
+
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+
+        SECTION("functions as expected") {
+            REQUIRE(vm->get_register(4) == 0x01);
+            REQUIRE(vm->get_register(3) == 0x08);
+        }
+
+        SECTION("does not sign-extend loaded byte") {
+            REQUIRE(vm->get_register(2) == 0x000000dd);
+            REQUIRE(vm->get_register(1) == 0x000000cc);
+        }
+    }
+
     SECTION("lwr") {
         WORD program[5];
         program[0] = Utilities::I_instruction(38, 1, 5, 0); // lwr r1, 0(r5)
