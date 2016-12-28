@@ -3,6 +3,7 @@
 typedef unsigned int REGISTER;
 typedef unsigned int ADDRESS;
 typedef unsigned int WORD;
+typedef unsigned long long int DWORD;
 typedef unsigned char BYTE;
 
 class Emulator {

@@ -165,14 +165,14 @@ int Emulator::step() {
                     break;
                 case 24: // mult
                     {
-                        long long int result = (long long int)Rss * (long long int)Rts;
+                        int64_t result = (int64_t)Rss * (int64_t)Rts;
                         LO = result;
                         HI = result >> 32;
                     }
                     break;
                 case 25: // multu
                     {
-                        unsigned long long int result = (unsigned long long int)Rs * (unsigned long long int)Rt;
+                        DWORD result = (DWORD)Rs * (DWORD)Rt;
                         LO = result;
                         HI = result >> 32;
                     }
