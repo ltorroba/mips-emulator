@@ -318,6 +318,14 @@ int Emulator::step() {
                 set_register(rt, se_res);
             }
             break;
+        case 0b010110: // lwl
+            {
+                ADDRESS effective_address = Rs + se_imm;
+                WORD aligned_word = load_word(effective_address & 0xfffffffc);
+                int left_shift = 3 - (effective_address & 0b11);
+                set_register(rt, aligned_word << (8 * left_shift));
+            }
+            break;
     }
 
     PC = PC + 4;
