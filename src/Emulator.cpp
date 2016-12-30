@@ -359,6 +359,9 @@ int Emulator::step() {
                 set_register(rt, aligned_word >> (8 * right_shift));
             }
             break;
+        case 40: // sb
+            store_byte(Rt, Rs + se_imm);
+            break;
         case 43: // sw
             if((Rs + se_imm) & 0x3)
                 return 1; // Trap if not multiple of 4
