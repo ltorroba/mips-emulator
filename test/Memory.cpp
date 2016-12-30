@@ -226,6 +226,35 @@ TEST_CASE("Test memory I/O instructions", "[step][Memory][I/O]") {
         }
     }
 
+    SECTION("sh") {
+        WORD program[6];
+        program[0] = Utilities::I_instruction(41, 8, 5, 0); // sh r1, 0(r5)
+        program[1] = Utilities::I_instruction(32, 1, 5, 0); // lb r1, 0(r5)
+        program[2] = Utilities::I_instruction(32, 2, 7, -3); // lb r2, -3(r7)
+        program[3] = Utilities::I_instruction(33, 9, 5, 0); // lh r1, 1(r5)
+        program[4] = Utilities::I_instruction(41, 8, 5, 1); // sh r1, 1(r5)
+        vm = new Emulator(128, program, 5);
+
+        vm->set_register(5, 32);
+        vm->set_register(7, 36);
+        vm->set_register(8, 0x00000102);
+
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+        REQUIRE(vm->step() == 0);
+
+        SECTION("functions as expected") {
+            REQUIRE(vm->get_register(1) == 0x02);
+            REQUIRE(vm->get_register(2) == 0x01);
+            REQUIRE(vm->get_register(9) == 0x0102);
+        }
+
+        SECTION("traps on unaligned addresses (those that are not multiples of 4)") {
+            REQUIRE(vm->step() == 1);
+        }
+    }
+
     SECTION("sw") {
         WORD program[6];
         program[0] = Utilities::I_instruction(43, 8, 5, 0); // sw r1, 0(r5)

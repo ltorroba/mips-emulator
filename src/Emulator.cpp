@@ -362,6 +362,16 @@ int Emulator::step() {
         case 40: // sb
             store_byte(Rt, Rs + se_imm);
             break;
+        case 41: // sh
+            if((Rs + se_imm) & 0x1)
+                return 1; // Trap if not multiple of 2
+            else
+            {
+                WORD a = Rt >> 8;
+                store_byte(Rt, Rs + se_imm);
+                store_byte(a, Rs + se_imm + 1);
+            }
+            break;
         case 43: // sw
             if((Rs + se_imm) & 0x3)
                 return 1; // Trap if not multiple of 4
