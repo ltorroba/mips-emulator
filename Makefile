@@ -3,8 +3,9 @@ CC				:= g++
 SRCDIR		:= src
 TESTDIR		:= test
 BUILDDIR	:= build
-TARGET		:= bin/emulator
-T_TARGET	:= bin/tests
+BINDIR		:= bin
+TARGET		:= $(BINDIR)/Emulator
+T_TARGET	:= $(BINDIR)/tests
 
 SRCEXT		:= cpp
 SOURCES		:= $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
@@ -19,6 +20,7 @@ INC				:= -I include
 
 $(TARGET): $(OBJECTS)
 	@echo "	Linking..."
+	@mkdir -p $(BINDIR)
 	@echo "	$(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
@@ -28,10 +30,11 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 
 clean:
 	@echo "	Cleaning..."
-	@echo "	$(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+	@echo "	$(RM) -r $(BUILDDIR) $(TARGET) $(BINDIR)"; $(RM) -r $(BUILDDIR) $(TARGET) $(BINDIR)
 
 tests: $(T_OBJECTS) $(R_OBJECTS)
 	@echo "	Linking tests..."
+	@mkdir -p $(BINDIR)
 	@echo "	$(CC) $^ -o $(T_TARGET) $(LIB)"; $(CC) $^ -o $(T_TARGET) $(LIB)
 
 $(BUILDDIR)/test/%.o: $(TESTDIR)/%.$(SRCEXT)
