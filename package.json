@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/zesme/aetherverse/issues"
   },
-  "homepage": "https://github.com/zesme/aetherverse#readme"
+  "homepage": "https://github.com/zesme/aetherverse#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "method-override": "^2.3.7",
+    "mongoose": "^4.7.6"
+  }
 }
