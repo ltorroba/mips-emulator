@@ -22,7 +22,7 @@ The bulk of the code, and examples of how the project works, can be found
 in the tests directory. In essence, you create an `Emulator`, upload
 a program, and manually set the memory/registers to the values you want.
 
-# Running and building
+## Running and building
 
 These instructions apply to MacOS, but should work in other environments. The easiest way to get started is to
 clone the repo and run `./build_tests.sh`. Alternatively:
@@ -36,7 +36,7 @@ The `bin` directory will contain:
 great for debugging during development).
 - `tests`: This runs all the unit tests.
 
-# Future work
+## Future work
 
 - I later took a class (Compiling Techniques) where I created a C-to-MIPS compiler using Java. While the generated
 assembly was in text form, it should be simple to adapt it to generate it in binary format, and load that directly
